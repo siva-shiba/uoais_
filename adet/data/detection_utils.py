@@ -58,7 +58,7 @@ def transform_segm_in_anno(annotation, transforms, key):
         )
     return annotation
 
-def convert_to_mask(segms):
+def convert_to_mask(segms, image_size):
     masks = []
     for segm in segms:
         if isinstance(segm, list):
@@ -166,11 +166,11 @@ def annotations_to_instances(annos, image_size, mask_format="polygon", amodal=Tr
     if len(annos) and "segmentation" in annos[0]:
 
         if amodal:
-            amodal_masks = convert_to_mask([obj["segmentation"] for obj in annos])
-            visible_masks = convert_to_mask([obj["visible_mask"] for obj in annos])
-            occluded_masks = convert_to_mask([obj["occluded_mask"] for obj in annos])
+            amodal_masks = convert_to_mask([obj["segmentation"] for obj in annos], image_size)
+            visible_masks = convert_to_mask([obj["visible_mask"] for obj in annos], image_size)
+            occluded_masks = convert_to_mask([obj["occluded_mask"] for obj in annos], image_size)
         else:
-            visible_masks = convert_to_mask([obj["visible_mask"] for obj in annos])
+            visible_masks = convert_to_mask([obj["visible_mask"] for obj in annos], image_size)
 
         if amodal:
             target.gt_masks = merge_bitmask(amodal_masks)
